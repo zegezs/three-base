@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Load GLTF Model</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.127.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/loaders/GLTFLoader.js"></script>
+    <script>
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // 设置环境光
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
+
+        // 设置方向光
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        scene.add(directionalLight);
+
+        // 创建GLTFLoader实例来加载模型
+        const loader = new THREE.GLTFLoader();
+
+        loader.load('https://shunos-iot.oss-cn-qingdao.aliyuncs.com/dm/-1/bcad19d9a07d483eb72d1b535065a415.gltf', function (gltf) {
+            // 当模型加载完成时执行此函数
+            const model = gltf.scene;
+            scene.add(model);
+        }, undefined, function (error) {
+            // 当模型加载出错时执行此函数
+            console.error('An error happened', error);
+        });
+
+        camera.position.z = 5;
+
+        const animate = function () {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        };
+
+        animate();
+    </script>
